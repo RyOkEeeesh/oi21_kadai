@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+    }
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+    }
+    body {
+      background-color: #282828;
+      color: aliceblue;
+    }
+    h1 {
+      width: 100%;
+      text-align: center;
+      font-size: 24px;
+    }
+    input[type="radio"] {display: none;}
+    input[type="radio"]:checked + label{
+      outline: 4px solid aliceblue;
+      outline-offset: 12px;
+    }
+    .box {
+      width: 100%;
+      height: calc(100vh - 40px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 50px;
+    }
+    label {
+      display: block;
+      user-select: none;
+      font-size: 36px;
+      border-radius: 8px;
+    }
+  </style>
+  <script>
+
+    (async () => {
+
+      class Status {
+        constructor() {
+          this.connectURL = 'http://127.0.0.1:5000/api/echo';
+          this.isConnect = false;
+          this.status = null;
+        }
+        async init(s = 4) {
+          try {
+            const res = await this.connect(s);
+            this.isConnect = true;
+            this.status = res;
+          } catch (e) {
+            return this;
+          }
+          return this;
+        }
+        async connect(status) {
+          const response = await fetch(this.connectURL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status })
+          });
+          const data = await response.json();
+          return Number(data.status);
+        }
+      }
+
+      const statusInstance = new Status();
+      const DOMload = new Promise(resolve => document.addEventListener('DOMContentLoaded', resolve));
+
+      Promise.all([
+        statusInstance.init(),
+        DOMload
+      ]).then(([obj]) => {
+        if (!obj.isConnect) throw new Error('Can\'t connect ;(');
+
+        const input = document.querySelectorAll('input');
+
+        if (typeof obj.status === 'number' && obj.status !== 4)
+          input[obj.status].checked = true;
+
+        input.forEach(input => 
+          input.onchange = e => 
+            obj.connect(obj.status = Number(e.target.value)));
+
+      }).catch(err => console.error(err.message));
+
+    })();
+
+  </script>
+</head>
+<body>
+  <h1>IO21 課題03</h1>
+  <div class="box">
+
+    <input type="radio" name="btn" value="0" id="0"><label class="btn" for="0">在籍</label>
+    <input type="radio" name="btn" value="1" id="1"><label class="btn" for="1">離席</label>
+    <input type="radio" name="btn" value="2" id="2"><label class="btn" for="2">校外</label>
+    <input type="radio" name="btn" value="3" id="3"><label class="btn" for="3">不在</label>
+
+  </div>
+</body>
+</html>
