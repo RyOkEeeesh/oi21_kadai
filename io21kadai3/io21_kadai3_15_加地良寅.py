@@ -25,6 +25,8 @@ def echo():
   data = request.json
   status = int(data.get('status', ''))
 
+  # GPIO.output(c.port, GPIO.LOW)
+
   if (status == 4 and not(c.working)) or status == 3:
     c.setstatus(status)
   elif status != c.status and status >= 0 and status < 3:
