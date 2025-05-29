@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-# import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 
 class status:
   def __init__(self):
@@ -17,21 +17,21 @@ class status:
 c = status()
 app = Flask(__name__)
 CORS(app)
-# GPIO.setmode(GPIO.BCM)
-# GPIO.setup(c.port, GPIO.OUT, initial=GPIO.LOW)
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(c.port, GPIO.OUT, initial=GPIO.LOW)
 
 @app.route('/api/echo', methods=['POST'])
 def echo():
   data = request.json
   status = int(data.get('status', ''))
 
-  # GPIO.output(c.port, GPIO.LOW)
+  GPIO.output(c.port, GPIO.LOW)
 
   if (status == 4 and not(c.working)) or status == 3:
     c.setstatus(status)
   elif status != c.status and status >= 0 and status < 3:
     c.setstatus(status)
-    # GPIO.output(c.port[c.status], GPIO.HIGH)
+    GPIO.output(c.port[c.status], GPIO.HIGH)
     c.changeWorkStatus(True)
 
   return jsonify({'status': c.status})
