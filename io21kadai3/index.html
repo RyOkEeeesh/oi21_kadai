@@ -69,7 +69,7 @@
           const data = await response.json();
           return Number(data.status);
         }
-      }
+      };
 
       const DOMload = new Promise(resolve => document.addEventListener('DOMContentLoaded', resolve));
 
