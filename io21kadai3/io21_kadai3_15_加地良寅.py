@@ -25,13 +25,13 @@ def echo():
   data = request.json
   status = int(data.get('status', ''))
 
-  if (status == 4 and not(c.working)) or status == 3:
+  if (status == 4 and not(c.working)):
     c.setstatus(status)
-  elif status != c.status and status >= 0 and status < 3:
+  elif status != c.status and status >= 0 and status < 4:
     GPIO.output(c.port, GPIO.LOW)
     c.setstatus(status)
-    GPIO.output(c.port[c.status], GPIO.HIGH)
     c.changeWorkStatus(True)
+    if c.status != 3: GPIO.output(c.port[c.status], GPIO.HIGH)
 
   return jsonify({'status': c.status})
 
@@ -43,4 +43,3 @@ if __name__ == '__main__':
     pass
   finally:
     GPIO.cleanup()
-    print('finish')
