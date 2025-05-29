@@ -71,11 +71,10 @@
         }
       }
 
-      const statusInstance = new Status();
       const DOMload = new Promise(resolve => document.addEventListener('DOMContentLoaded', resolve));
 
       Promise.all([
-        statusInstance.init(),
+        new Status().init(),
         DOMload
       ]).then(([obj]) => {
         if (!obj.isConnect) throw new Error('Can\'t connect ;(');
