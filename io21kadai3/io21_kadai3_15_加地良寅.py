@@ -6,7 +6,6 @@ class Status:
   def __init__(self):
     self.working = False
     self.status = None
-    self.port = [13, 19, 26]
   def	setStatus(self, s):
     self.status = s
   def changeWorkStatus(self, bool):
@@ -15,8 +14,10 @@ class Status:
 c = Status()
 app = Flask(__name__)
 CORS(app)
+
+PORT =  [13, 19, 26]
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(c.port, GPIO.OUT, initial=GPIO.LOW)
+GPIO.setup(PORT, GPIO.OUT, initial=GPIO.LOW)
 
 @app.route('/api/echo', methods=['POST'])
 def echo():
@@ -26,10 +27,10 @@ def echo():
   if status == 4 and not(c.working):
     c.setStatus(status)
   elif status != c.status and status >= 0 and status < 4:
-    GPIO.output(c.port, GPIO.LOW)
+    GPIO.output(PORT, GPIO.LOW)
     c.setStatus(status)
     c.changeWorkStatus(True)
-    if c.status != 3: GPIO.output(c.port[c.status], GPIO.HIGH)
+    if c.status != 3: GPIO.output(PORT[c.status], GPIO.HIGH)
 
   return jsonify({'status': c.status})
 
