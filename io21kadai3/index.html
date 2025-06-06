@@ -45,23 +45,27 @@
     (async () => {
 
       class Status {
+        #connectURL
+
         constructor() {
-          this.connectURL = 'http://127.0.0.1:5000/api/echo';
+          this.#connectURL = 'http://127.0.0.1:5000/api/echo';
           this.isConnect = false;
           this.status = null;
         }
+
         async init(s = 4) {
           try {
             const res = await this.connect(s);
             this.isConnect = true;
             this.status = res;
-          } catch (e) {
+          } catch {
             return this;
           }
           return this;
         }
+
         async connect(status) {
-          const response = await fetch(this.connectURL, {
+          const response = await fetch(this.#connectURL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ status })
