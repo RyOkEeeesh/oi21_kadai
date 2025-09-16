@@ -6,8 +6,10 @@ class Status:
   def __init__(self):
     self.working = False
     self.status = None
+
   def	setStatus(self, s):
     self.status = s
+
   def changeWorkStatus(self, bool):
     self.working = bool
 
